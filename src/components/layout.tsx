@@ -5,7 +5,7 @@ type Props = {
     children: ReactNode
 }
 
-export default function Layout(props: Props) {
+export function Layout(props: Props) {
     return (
         <div>
             <header>
