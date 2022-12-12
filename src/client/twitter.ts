@@ -89,8 +89,8 @@ export const deleteTweets = (tweets: Tweet[]) => {
     console.log('Deleting tweets since', dayjs().subtract(purgeConfig.purge_after, "day").format('MMM DD YYYY'), '-', deleteItems.length, 'tweets')
 
     const promises = deleteItems.map(i => {
-        console.log('Delete', i.id, i.created_at, i.text.substring(0, 32))
-        // client.post('statuses/destroy/:id', { id: i.id })
+        console.log('Delete', i.id, i.created_at)
+        client.post('statuses/destroy/:id', { id: i.id })
     })
 
     fs.writeFileSync('settings.json', JSON.stringify({
