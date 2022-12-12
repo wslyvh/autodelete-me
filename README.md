@@ -1,5 +1,17 @@
-# Twitter purge
+# twitter-purge 🧹
 
+**Twitter purge** automatically deletes old tweets from your timeline. 
+
+- Protect your privacy
+- Reduce your digital footprint
+- Don't let your old tweets come back to haunt you
+
+
+## IMPORTANT
+
+This product is still in development. Use at your own risk. Deleting Tweets is irreversible. 
+
+---
 ## Getting Started
 
 1. Sign up and create a project on the [Twitter Developer Portal](https://developer.twitter.com/)
@@ -43,3 +55,7 @@ The default should be something like
 - `since_id` gets updated after each run
 - `purge_after` is the amount of days that tweets get deleted. Please note that the Twitter API limit is capped at 3200. Depending on how often you tweet, this could affect the purge.
 - `whitelist` is a list of tweet ids to you want to keep. Even if it passed your purge date.
+
+### Cron Job
+
+The cron job in `.github/workflows` will automatically run on daily basis. Make sure to configure [repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) with the same variables as your `.env` file.
