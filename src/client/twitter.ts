@@ -38,11 +38,11 @@ export const getUserTimeline = async (): Promise<Tweet[]> => {
 
     const tweets: any[] = []
     const params: Params = { count: count }
-    let recursive = !purgeConfig.since_id // Usually only on initial run
-    if (purgeConfig.since_id) params.since_id = purgeConfig.since_id // Sequential runs would only fetch new tweets
+    if (purgeConfig.since_id) params.since_id = purgeConfig.since_id
 
-    if (recursive) console.log('Fetching tweets recursively. This might take a while..')
-    if (params.since_id) console.log('Fetching tweets since', params.since_id)
+    let recursive = true
+    console.log('Fetching tweets with params', params)
+    console.log('This might take a while..')
     while (recursive) {
         const response = await client.get('statuses/user_timeline', params)
         const data = response.data as any[]
@@ -50,16 +50,36 @@ export const getUserTimeline = async (): Promise<Tweet[]> => {
             return {
                 id: i.id_str,
                 created_at: i.created_at,
-                text: i.text
+                text: i.text,
+                parent: i.in_reply_to_status_id_str
             }
         }))
 
+        console.log('Processing tweets', tweets.length)
+
         // Max. 3200 results limit from Twitter API
-        if (data.length === 0 || data.length < count || tweets.length > 3200) recursive = false // break loop
+        if (data.length === 0 || data.length < count || tweets.length > 3200) break
         if (tweets.length > 0) params.max_id = tweets[tweets.length - 1].id
     }
 
-    return tweets
+    // Traverse parents to protect whitelisted threads from root
+    return tweets.map((i: any) => {
+        if (!i.parent) return i
+
+        let parent = tweets.find(x => x.id === i.parent)
+        while (parent) {
+            if (parent.parent === null) {
+                return {
+                    ...i,
+                    root: parent.id
+                }
+            }
+
+            parent = tweets.find(x => x.id === parent.parent)
+        }
+
+        return i
+    })
 }
 
 export const deleteTweets = (tweets: Tweet[]) => {
@@ -69,7 +89,7 @@ export const deleteTweets = (tweets: Tweet[]) => {
     console.log('Deleting tweets since', dayjs().subtract(purgeConfig.purge_after, "day").format('MMM DD YYYY'), '-', deleteItems.length, 'tweets')
 
     const promises = deleteItems.map(i => {
-        console.log('Delete', i.id, i.created_at)
+        console.log('Delete', i.id, i.created_at, i.text.substring(0, 32))
         // client.post('statuses/destroy/:id', { id: i.id })
     })
 

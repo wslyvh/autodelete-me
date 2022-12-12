@@ -19,4 +19,7 @@ export interface UserCredentials {
 export interface Tweet {
     id: string,
     created_at: string
+    text: string
+    parent: string | null
+    root: string | null
 }
