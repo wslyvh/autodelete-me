@@ -1,0 +1,27 @@
+name: Purge Twitter
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: yarn install
+
+      - name: Purge Twitter
+        run: yarn start
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_API_SECRET: ${{ secrets.TWITTER_API_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+
+      - uses: EndBug/add-and-commit@v9
+

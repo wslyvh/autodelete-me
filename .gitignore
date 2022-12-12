@@ -8,16 +8,9 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
 # production
 /build
-
-# misc
-.DS_Store
-*.pem
+/dist
 
 # debug
 npm-debug.log*
@@ -29,9 +22,5 @@ yarn-error.log*
 .env
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
-next-env.d.ts
