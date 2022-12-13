@@ -84,7 +84,9 @@ export const getUserTimeline = async (): Promise<Tweet[]> => {
 
 export const deleteTweets = (tweets: Tweet[]) => {
     const deleteItems = tweets
-        .filter(i => !purgeConfig.whitelist.includes(i.id))
+        .filter(i =>
+            !purgeConfig.whitelist.includes(i.id) ||
+            !purgeConfig.whitelist.includes(i.root ?? ''))
         .filter(i => dayjs(i.created_at).isBefore(dayjs().subtract(purgeConfig.purge_after, "day")))
     console.log('Deleting tweets since', dayjs().subtract(purgeConfig.purge_after, "day").format('MMM DD YYYY'), '-', deleteItems.length, 'tweets')
 
