@@ -58,6 +58,30 @@ export const getUserTimeline = async (): Promise<Tweet[]> => {
     return withRoot(tweets)
 }
 
+export const getUserLikes = async (): Promise<string[]> => {
+    console.log('Get User likes.')
+
+    const likes: Twit.Twitter.Status[] = []
+    const params: Params = { count: count, include_entities: false }
+
+    console.log('Fetching likes with params', params)
+    console.log('This might take a while..')
+
+    while (true) {
+        const response = await client.get('favorites/list', params)
+        const data = response.data as Twit.Twitter.Status[]
+        likes.push(...data)
+
+        console.log('Processing likes', likes.length)
+
+        // TODO: not sure if there's a 3200 limit on likes. Keeping it as a safety to break at some point
+        if (data.length === 0 || data.length < count || likes.length > 3200) break
+        if (likes.length > 0) params.max_id = likes[likes.length - 1].id_str
+    }
+
+    return likes.map(i => i.id_str)
+}
+
 export const getArchivedTweets = async (): Promise<Tweet[]> => {
     console.log('Get tweets from archive.')
 
@@ -70,6 +94,18 @@ export const getArchivedTweets = async (): Promise<Tweet[]> => {
     return withRoot(tweets.map((i: any) => i.tweet))
 }
 
+export const getArchivedLikes = async (): Promise<string[]> => {
+    console.log('Get tweets from archive.')
+
+    const rawArchive = fs.readFileSync('archive.zip')
+    const jszip = new JSZip()
+    const zip = await jszip.loadAsync(rawArchive)
+    const likesData = await zip.file('data/like.js')?.async('string')
+    const likes = JSON.parse(likesData?.replace('window.YTD.like.part0 = ', '') ?? '')
+
+    return likes.map((i: any) => i.like.tweetId)
+}
+
 export const deleteTweets = (tweets: Tweet[]) => {
     const deleteItems = tweets
         .filter(i =>
@@ -80,13 +116,35 @@ export const deleteTweets = (tweets: Tweet[]) => {
 
     const promises = deleteItems.map(i => {
         console.log('Delete', i.id, i.root, i.created_at)
-        client.post('statuses/destroy/:id', { id: i.id })
+        try {
+            client.post('statuses/destroy/:id', { id: i.id })
+        }
+        catch (e) {
+            // ignore
+        }
     })
 
     fs.writeFileSync('settings.json', JSON.stringify({
         ...purgeConfig,
         since_id: deleteItems.length > 0 ? deleteItems[deleteItems.length - 1].id : null
     }, null, 2))
+
+    return Promise.allSettled(promises)
+}
+
+export const deleteLikes = (ids: string[]) => {
+    const deleteItems = ids.slice(count, ids.length)
+    console.log('Deleting likes', '-', deleteItems.length, 'tweets')
+
+    const promises = deleteItems.map(i => {
+        console.log('Delete like', i)
+        try {
+            client.post('favorites/destroy', { id: i })
+        }
+        catch (e) {
+            // ignore
+        }
+    })
 
     return Promise.allSettled(promises)
 }

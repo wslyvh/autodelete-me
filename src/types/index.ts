@@ -19,7 +19,7 @@ export interface UserCredentials {
 export interface Tweet {
     id: string,
     created_at: string
-    text: string | undefined
-    parent: string | undefined
-    root: string | undefined
+    text?: string | undefined
+    parent?: string | undefined
+    root?: string | undefined
 }
