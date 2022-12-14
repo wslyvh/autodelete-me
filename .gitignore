@@ -24,3 +24,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Twitter archive
+archive.zip
+archive

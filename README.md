@@ -7,11 +7,10 @@
 - Don't let your old tweets come back to haunt you
 
 
-## IMPORTANT 🚨🚧
+> **Note**
+> 🚧 This product is still in development. Use at your own risk. Deleting Tweets is irreversible. 
 
-This product is still in development. Use at your own risk. Deleting Tweets is irreversible. 
 
----
 ## Getting Started
 
 1. Sign up and create a project on the [Twitter Developer Portal](https://developer.twitter.com/)
@@ -43,6 +42,10 @@ TWITTER_ACCESS_TOKEN_SECRET=''
 
 The root of this project contains a settings file to configure the purge.
 
+
+> **Note**
+> 🚨 If you fork this repo to run this on your own account, make sure to update to default (empty) values.
+
 The default should be something like
 ```
 "since_id": null,
@@ -56,6 +59,30 @@ The default should be something like
 - `purge_after` is the amount of days that tweets get deleted. Please note that the Twitter API limit is capped at 3200. Depending on how often you tweet, this could affect the purge.
 - `whitelist` is a list of tweet ids to you want to keep. Even if it passed your purge date.
 
+### Manual run
+
+You can run a purge manually using the following command.
+
+```
+yarn start
+```
+
 ### Cron Job
 
 The cron job in `.github/workflows` will automatically run on daily basis. Make sure to configure [repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) with the same variables as your `.env` file.
+
+
+### Archive 
+
+The Twitter API only returns the last 3200 tweets. This is likely insufficient for most accounts. In order to delete historical tweets, you need to [download an archive of your data](https://twitter.com/settings/download_your_data).
+
+This might take up to 24 hours. Once you have your data, add it to the root of this project with the name `archive.zip`.
+
+> **Note**
+> 🚨 Make sure you rename your archive to `archive.zip` or exclude it in `.gitignore`.
+
+You can run a full archive purge using the following command.
+
+```
+yarn start:archive
+```

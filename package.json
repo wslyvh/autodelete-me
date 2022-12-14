@@ -5,10 +5,12 @@
   "scripts": {
     "build": "tsc",
     "start": "ts-node ./src/main",
+    "start:archive": "ts-node ./src/archive",
     "lint": "eslint ./src --fix"
   },
   "dependencies": {
     "dayjs": "^1.11.7",
+    "jszip": "^3.10.1",
     "twit": "^2.2.11"
   },
   "devDependencies": {
