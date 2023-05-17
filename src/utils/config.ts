@@ -1,31 +1,27 @@
 import { config } from 'dotenv'
-import { PurgeConfig, TwitterConfig } from 'types'
-import settings from '../../settings.json'
+import { ProviderConfig, Providers } from 'types'
+import { getLast } from './log'
+import appSettings from '../../settings.json'
 
-export function loadTwitterConfig(): TwitterConfig {
-    config()
+config()
 
-    if (!process.env.TWITTER_API_KEY ||
-        !process.env.TWITTER_API_SECRET ||
-        !process.env.TWITTER_ACCESS_TOKEN ||
-        !process.env.TWITTER_ACCESS_TOKEN_SECRET
-    ) {
-        console.error('Missing required environment variables. Make sure `.env` is correctly set.')
-        process.exit(1)
-    }
+export function getProviderConfig(provider: Providers) {
+  const settings = appSettings as any
+  const config = settings[provider] as ProviderConfig
 
-    return {
-        TWITTER_API_KEY: process.env.TWITTER_API_KEY,
-        TWITTER_API_SECRET: process.env.TWITTER_API_SECRET,
-        TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN,
-        TWITTER_ACCESS_TOKEN_SECRET: process.env.TWITTER_ACCESS_TOKEN_SECRET
-    }
-}
+  if (!config) {
+    console.error(`Missing config for provider ${provider}`)
+    // process.exit(1)
+  }
 
-export function loadPurgeConfig(): PurgeConfig {
-    return {
-        since_id: settings.since_id || null,
-        purge_after: settings.purge_after || 180,
-        whitelist: settings.whitelist || []
-    }
+  return {
+    type: provider,
+    days: config.days ?? 90,
+    // 'since' can help reduce API calls to fetch from last deleted item
+    // disabled as both providers throw intermittent servers errors that mess up the pointers
+    since: undefined, // getLast(provider),
+    groups: config.groups ?? [],
+    whitelist: config.whitelist ?? [],
+    terms: config.terms ?? [],
+  }
 }

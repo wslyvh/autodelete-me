@@ -1,25 +1,18 @@
-export interface TwitterConfig {
-    TWITTER_API_KEY: string
-    TWITTER_API_SECRET: string
-    TWITTER_ACCESS_TOKEN: string
-    TWITTER_ACCESS_TOKEN_SECRET: string
+export type Providers = 'twitter' | 'reddit'
+
+export interface ProviderConfig {
+  type: Providers
+  days: number
+  since: string | number | undefined
+  groups: string[]
+  whitelist: string[]
+  terms: string[]
 }
 
-export interface PurgeConfig {
-    since_id: string | null
-    purge_after: number
-    whitelist: string[]
-}
-
-export interface UserCredentials {
-    id: number
-    username: string
-}
-
-export interface Tweet {
-    id: string,
-    created_at: string
-    text?: string | undefined
-    parent?: string | undefined
-    root?: string | undefined
+export interface Post {
+  id: string
+  created: string
+  text?: string | undefined
+  parent?: string | undefined
+  root?: string | undefined
 }
