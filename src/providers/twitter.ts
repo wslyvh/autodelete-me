@@ -6,7 +6,7 @@ import { writeLog } from 'utils/log'
 const MAX_LIMIT = 200
 
 export class TwitterProvider {
-  private TEST_MODE = false
+  private TEST_MODE
   private config: ProviderConfig
   private client: Twit
 

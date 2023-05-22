@@ -17,7 +17,7 @@ const USER_AGENT = 'autodelete.me'
 const EDIT_OVERWRITE = 'Wiped by autodelete.me..'
 
 export class RedditProvider {
-  private TEST_MODE = false
+  private TEST_MODE
   private config: ProviderConfig
   private client: snoowrap
 
@@ -49,10 +49,6 @@ export class RedditProvider {
     const submittedToDelete = this.filterItems(submitted)
     console.log('Total submitted posts', submitted.length, 'Posts to delete', submittedToDelete.length)
 
-    console.log(
-      'SUBMITTED',
-      submitted.map((i) => i.name)
-    )
     const deletedItems = []
 
     for (let i = 0; i < submittedToDelete.length; i++) {
