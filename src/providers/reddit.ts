@@ -1,7 +1,10 @@
+import { config } from 'dotenv'
 import dayjs from 'dayjs'
 import snoowrap from 'snoowrap'
 import { ProviderConfig } from 'types'
 import { writeLog } from 'utils/log'
+
+config()
 
 // Fix https://github.com/not-an-aardvark/snoowrap/issues/221
 declare module 'snoowrap' {

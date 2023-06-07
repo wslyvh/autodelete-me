@@ -1,7 +1,10 @@
+import { config } from 'dotenv'
 import dayjs from 'dayjs'
 import Twit, { Params } from 'twit'
 import { Post, ProviderConfig } from 'types'
 import { writeLog } from 'utils/log'
+
+config()
 
 const MAX_LIMIT = 200
 
