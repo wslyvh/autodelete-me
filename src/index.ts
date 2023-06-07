@@ -1,4 +1,5 @@
 import { config } from 'dotenv'
+import 'dotenv/config'
 import { RedditProvider } from 'providers/reddit'
 import { TwitterProvider } from 'providers/twitter'
 import { getProviderConfig } from 'utils/config'
