@@ -18,8 +18,9 @@ async function run() {
   const reddit = new RedditProvider(getProviderConfig('reddit'), TEST_MODE)
   await reddit.Run()
 
-  const twitter = new TwitterProvider(getProviderConfig('twitter'), TEST_MODE)
-  await twitter.Run()
+  // disabled due to new Twitter V2 API
+  // const twitter = new TwitterProvider(getProviderConfig('twitter'), TEST_MODE)
+  // await twitter.Run()
 }
 
 export {}
