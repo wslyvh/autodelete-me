@@ -11,6 +11,7 @@
   "dependencies": {
     "dayjs": "^1.11.7",
     "jszip": "^3.10.1",
+    "nitter-scraper": "^1.0.3",
     "snoowrap": "^1.23.0",
     "twit": "^2.2.11"
   },

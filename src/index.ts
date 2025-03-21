@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { RedditProvider } from 'providers/reddit'
 import { TwitterProvider } from 'providers/twitter'
 import { getProviderConfig } from 'utils/config'
+import { fetchTweets } from 'nitter-scraper'
 
 const TEST_MODE = false
 
@@ -15,12 +16,11 @@ run()
 async function run() {
   console.log('Running auto-delete.me...')
 
-  const reddit = new RedditProvider(getProviderConfig('reddit'), TEST_MODE)
-  await reddit.Run()
+  // const reddit = new RedditProvider(getProviderConfig('reddit'), TEST_MODE)
+  // await reddit.Run()
 
-  // disabled due to new Twitter V2 API
-  // const twitter = new TwitterProvider(getProviderConfig('twitter'), TEST_MODE)
-  // await twitter.Run()
+  const tweets = await fetchTweets('wslyvh', 3)
+  console.log(`Found ${tweets.length} tweets`)
 }
 
 export {}
